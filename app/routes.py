@@ -1364,3 +1364,44 @@ def reset_password():
         return redirect(url_for('auth.login'))
 
     return render_template('auth/reset_password.html', title='Reset Password')
+
+
+# ============================================================================
+# ABA-TECH AI FOLLOW-UP CHAT
+# ============================================================================
+
+@main_bp.route('/ai/chat-followup', methods=['POST'])
+@login_required
+def ai_chat_followup():
+    from flask import jsonify
+    from app.ai_service import call_ai
+    import json
+
+    data = request.get_json()
+    message = data.get('message', '')
+    topic = data.get('topic', '')
+    note_content = data.get('note_content', '')
+    history = data.get('history', [])
+
+    if not message:
+        return jsonify({'reply': 'Please enter a question.'})
+
+    system_prompt = f"""You are ABA-TECH AI, a smart study assistant built by Abaye Jeremiah for StudyHub.
+You are helping a student understand the topic: {topic}.
+Here is a summary of the study note already generated:
+{note_content}
+
+Answer the student's follow-up questions clearly and helpfully.
+Keep answers concise but detailed. Use bullet points when listing things.
+Never ask questions back — just provide the best answer you can.
+Always stay on topic about {topic}."""
+
+    messages = []
+    for h in history[-6:]:
+        messages.append({'role': h['role'], 'content': h['content']})
+
+    try:
+        reply = call_ai(messages, system_prompt=system_prompt)
+        return jsonify({'reply': reply})
+    except Exception as e:
+        return jsonify({'reply': f'Error: {str(e)}'})
