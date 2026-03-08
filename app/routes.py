@@ -1328,3 +1328,39 @@ def send_notification(user_id, title, message, icon='🔔', link=''):
     )
     db.session.add(notif)
     db.session.commit()
+
+
+# ============================================================================
+# RESET PASSWORD
+# ============================================================================
+
+@auth_bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        new_password = request.form.get('new_password', '').strip()
+        confirm_password = request.form.get('confirm_password', '').strip()
+
+        if not email or not new_password:
+            flash('Please fill in all fields.', 'danger')
+            return render_template('auth/reset_password.html')
+
+        if new_password != confirm_password:
+            flash('Passwords do not match.', 'danger')
+            return render_template('auth/reset_password.html')
+
+        if len(new_password) < 6:
+            flash('Password must be at least 6 characters.', 'danger')
+            return render_template('auth/reset_password.html')
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash('No account found with that email.', 'danger')
+            return render_template('auth/reset_password.html')
+
+        user.set_password(new_password)
+        db.session.commit()
+        flash('Password reset successfully! You can now log in.', 'success')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_password.html', title='Reset Password')
