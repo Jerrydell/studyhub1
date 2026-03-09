@@ -1396,12 +1396,12 @@ Keep answers concise but detailed. Use bullet points when listing things.
 Never ask questions back — just provide the best answer you can.
 Always stay on topic about {topic}."""
 
-    messages = []
-    for h in history[-6:]:
-        messages.append({'role': h['role'], 'content': h['content']})
+    # Build full prompt as single message if models don't support system role
+    full_prompt = f"{system_prompt}\n\nStudent question: {message}"
+    messages = [{'role': 'user', 'content': full_prompt}]
 
     try:
-        reply = call_ai(messages, system_prompt=system_prompt)
+        reply = call_ai(full_prompt)
         return jsonify({'reply': reply})
     except Exception as e:
         return jsonify({'reply': f'Error: {str(e)}'})
