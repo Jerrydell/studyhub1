@@ -13,6 +13,8 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 # List of free models to try in order (fastest first)
 FREE_MODELS = [
     "openrouter/free",
+    "google/gemini-2.0-flash-exp:free",
+    "deepseek/deepseek-r1:free",
     "meta-llama/llama-4-scout:free",
     "meta-llama/llama-4-maverick:free",
     "deepseek/deepseek-chat-v3-0324:free",
