@@ -12,15 +12,13 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # List of free models to try in order (fastest first)
 FREE_MODELS = [
-    "openrouter/free",
-    "google/gemini-2.0-flash-exp:free",
-    "deepseek/deepseek-r1:free",
-    "meta-llama/llama-4-scout:free",
-    "meta-llama/llama-4-maverick:free",
-    "deepseek/deepseek-chat-v3-0324:free",
-    "mistralai/mistral-small-3.1-24b-instruct:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
+    "meta-llama/llama-3.2-3b-instruct:free",    # Fastest - small model
+    "google/gemma-3-4b-it:free",                 # Fast - small model
+    "qwen/qwen3-4b:free",                        # Fast - small model
+    "mistralai/mistral-small-3.1-24b-instruct:free",  # Medium
+    "meta-llama/llama-3.3-70b-instruct:free",    # Slowest but most powerful
 ]
+
 
 def call_ai(prompt_or_messages, max_tokens: int = 1024, system_prompt: str = None) -> str:
     """Call OpenRouter API, trying each free model until one works."""

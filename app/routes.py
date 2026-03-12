@@ -378,11 +378,24 @@ def view_note(note_id):
     View a specific note
     """
     note = Note.query.get_or_404(note_id)
-    
-    # Security: Ensure the note belongs to the current user (through subject)
-    if note.subject.user_id != current_user.id:
+
+    # Allow owner to view
+    is_owner = note.subject.user_id == current_user.id
+
+    # Allow group members to view if they share a group with the note owner
+    is_group_member = False
+    if not is_owner:
+        from app.models import StudyGroup
+        note_owner_id = note.subject.user_id
+        my_groups = StudyGroup.query.filter(StudyGroup.members.any(id=current_user.id)).all()
+        for group in my_groups:
+            if group.members.filter_by(id=note_owner_id).first():
+                is_group_member = True
+                break
+
+    if not is_owner and not is_group_member:
         abort(403)
-    
+
     return render_template('notes/view.html', title=note.title, note=note)
 
 
