@@ -3,7 +3,10 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>✨ AI Note Generator</h2>
+    <div>
+        <h2>✨ AI Note Generator</h2>
+        <small class="text-muted">Powered by <strong>ABA-TECH</strong></small>
+    </div>
     <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Back
     </a>
@@ -11,9 +14,10 @@
 
 <!-- Generator Form -->
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-dark text-white">
+    <div class="card-header text-white d-flex justify-content-between align-items-center"
+         style="background: linear-gradient(135deg, #1a1a2e, #0d6efd);">
         <strong>✨ Generate a Study Note with AI</strong>
-        <span class="badge bg-warning text-dark ms-2">Powered by AI</span>
+        <span class="badge bg-warning text-dark">ABA-TECH AI</span>
     </div>
     <div class="card-body">
         <form method="POST" action="{{ url_for('main.ai_generate_note') }}">
@@ -22,7 +26,7 @@
                 <div class="col-md-6">
                     <label class="form-label fw-bold">📚 Topic</label>
                     <input type="text" name="topic" class="form-control form-control-lg"
-                           placeholder="e.g. Photosynthesis, Newton's Laws, World War 2..."
+                           placeholder="e.g. Photosynthesis, Newton's Laws..."
                            value="{{ topic or '' }}" required>
                     <small class="text-muted">Enter any topic and AI will write a full study note</small>
                 </div>
@@ -47,7 +51,8 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-dark btn-lg mt-3" id="generate-btn">
+            <button type="submit" class="btn btn-lg mt-3" id="generate-btn"
+                    style="background: linear-gradient(135deg, #1a1a2e, #0d6efd); color:white;">
                 ✨ Generate Note
             </button>
         </form>
@@ -56,8 +61,8 @@
 
 {% if generated_content %}
 <!-- Generated Note -->
-<div class="card shadow-sm">
-    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
         <strong>✅ Generated Note — Review and Save</strong>
     </div>
     <div class="card-body">
@@ -101,12 +106,67 @@
         </form>
     </div>
 </div>
+
+<!-- ABA-TECH AI Follow-up Chat -->
+<div class="card shadow-sm" id="chat-section">
+    <div class="card-header text-white d-flex justify-content-between align-items-center"
+         style="background: linear-gradient(135deg, #1a1a2e, #6f42c1);">
+        <div>
+            <strong>🤖 ABA-TECH AI Assistant</strong>
+            <small class="ms-2 opacity-75">Ask follow-up questions about this topic</small>
+        </div>
+        <span class="badge bg-warning text-dark">ABA-TECH</span>
+    </div>
+    <div class="card-body">
+        <!-- Chat Messages -->
+        <div id="chat-messages" style="height:350px; overflow-y:auto; border:1px solid #dee2e6; border-radius:8px; padding:15px; background:#f8f9fa; margin-bottom:15px;">
+            <div class="d-flex gap-2 mb-3">
+                <div style="width:35px; height:35px; border-radius:50%; background:linear-gradient(135deg,#1a1a2e,#6f42c1); display:flex; align-items:center; justify-content:center; color:white; font-size:0.8rem; flex-shrink:0;">
+                    AI
+                </div>
+                <div class="p-3 rounded" style="background:white; border:1px solid #dee2e6; max-width:85%;">
+                    <small class="text-muted d-block mb-1"><strong>ABA-TECH AI</strong></small>
+                    Hi! I just generated a note on <strong>{{ topic }}</strong>. Ask me anything about this topic — I can explain concepts, give examples, create practice questions, or go deeper into any section! 🎓
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="d-flex gap-2">
+            <input type="text" id="chat-input" class="form-control form-control-lg"
+                   placeholder="Ask a follow-up question about {{ topic }}..."
+                   onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="btn btn-lg text-white" onclick="sendMessage()" id="send-btn"
+                    style="background:linear-gradient(135deg,#1a1a2e,#6f42c1); min-width:100px;">
+                Send 🚀
+            </button>
+        </div>
+
+        <!-- Quick Questions -->
+        <div class="mt-3">
+            <small class="text-muted fw-bold">Quick questions:</small>
+            <div class="d-flex flex-wrap gap-2 mt-1">
+                <button class="btn btn-sm btn-outline-primary" onclick="askQuick('Give me 5 practice questions on {{ topic }}')">📝 Practice Questions</button>
+                <button class="btn btn-sm btn-outline-success" onclick="askQuick('Summarize {{ topic }} in simple terms')">📋 Simple Summary</button>
+                <button class="btn btn-sm btn-outline-warning" onclick="askQuick('Give real life examples of {{ topic }}')">💡 Real Examples</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="askQuick('What are the most important points to remember about {{ topic }}')">⭐ Key Points</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-center" style="background:#f8f9fa;">
+        <small class="text-muted">🔒 Powered by <strong>ABA-TECH AI</strong> | StudyHub</small>
+    </div>
+</div>
 {% endif %}
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
+const topic = "{{ topic or '' }}";
+const noteContent = `{{ generated_content or '' }}`.substring(0, 1000);
+let chatHistory = [];
+
 document.querySelector('form').addEventListener('submit', function() {
     const btn = document.getElementById('generate-btn');
     if (btn) {
@@ -114,5 +174,81 @@ document.querySelector('form').addEventListener('submit', function() {
         btn.disabled = true;
     }
 });
+
+function askQuick(question) {
+    document.getElementById('chat-input').value = question;
+    sendMessage();
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    const sendBtn = document.getElementById('send-btn');
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    // Add user message
+    appendMessage('user', message);
+
+    chatHistory.push({ role: 'user', content: message });
+
+    try {
+        const response = await fetch('/ai/chat-followup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            },
+            body: JSON.stringify({
+                message: message,
+                topic: topic,
+                note_content: noteContent,
+                history: chatHistory.slice(-6)
+            })
+        });
+
+        const data = await response.json();
+        const reply = data.reply || 'Sorry, I could not get a response. Please try again.';
+
+        chatHistory.push({ role: 'assistant', content: reply });
+        appendMessage('ai', reply);
+
+    } catch (error) {
+        appendMessage('ai', 'Connection error. Please try again.');
+    }
+
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = 'Send 🚀';
+}
+
+function appendMessage(role, text) {
+    const container = document.getElementById('chat-messages');
+    const isAI = role === 'ai';
+
+    const div = document.createElement('div');
+    div.className = 'd-flex gap-2 mb-3' + (isAI ? '' : ' flex-row-reverse');
+
+    const avatar = document.createElement('div');
+    avatar.style.cssText = 'width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;flex-shrink:0;';
+    avatar.style.background = isAI ? 'linear-gradient(135deg,#1a1a2e,#6f42c1)' : 'linear-gradient(135deg,#0d6efd,#20c997)';
+    avatar.textContent = isAI ? 'AI' : 'You';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'p-3 rounded';
+    bubble.style.cssText = 'max-width:85%;' + (isAI ? 'background:white;border:1px solid #dee2e6;' : 'background:#0d6efd;color:white;');
+    if (isAI) {
+        bubble.innerHTML = '<small class="text-muted d-block mb-1"><strong>ABA-TECH AI</strong></small>' + text.replace(/\n/g, '<br>');
+    } else {
+        bubble.textContent = text;
+    }
+
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
 </script>
 {% endblock %}

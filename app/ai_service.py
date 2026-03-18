@@ -12,15 +12,17 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # List of free models to try in order (fastest first)
 FREE_MODELS = [
-    "meta-llama/llama-3.2-3b-instruct:free",    # Fastest - small model
-    "google/gemma-3-4b-it:free",                 # Fast - small model
-    "qwen/qwen3-4b:free",                        # Fast - small model
-    "mistralai/mistral-small-3.1-24b-instruct:free",  # Medium
-    "meta-llama/llama-3.3-70b-instruct:free",    # Slowest but most powerful
+    "openrouter/free",
+    "meta-llama/llama-4-scout:free",
+    "meta-llama/llama-4-maverick:free",
+    "deepseek/deepseek-chat-v3-0324:free",
+    "google/gemini-2.0-flash-exp:free",
+    "mistralai/mistral-small-3.1-24b-instruct:free",
+    "meta-llama/llama-3.3-70b-instruct:free",
 ]
 
 
-def call_ai(prompt: str, max_tokens: int = 1024) -> str:
+def call_ai(prompt_or_messages, max_tokens: int = 1024, system_prompt: str = None) -> str:
     """Call OpenRouter API, trying each free model until one works."""
     load_dotenv(override=True)
     api_key = os.environ.get('OPENROUTER_API_KEY', '')
@@ -28,10 +30,19 @@ def call_ai(prompt: str, max_tokens: int = 1024) -> str:
     if not api_key or api_key == 'your_openrouter_api_key_here':
         return "❌ API key not set. Please add OPENROUTER_API_KEY to your .env file."
 
+    # Build messages list
+    if isinstance(prompt_or_messages, list):
+        messages = prompt_or_messages
+    else:
+        messages = [{"role": "user", "content": prompt_or_messages}]
+
+    if system_prompt:
+        messages = [{"role": "system", "content": system_prompt}] + messages
+
     for model in FREE_MODELS:
         payload = json.dumps({
             "model": model,
-            "messages": [{"role": "user", "content": prompt}],
+            "messages": messages,
             "max_tokens": max_tokens,
         }).encode("utf-8")
 
