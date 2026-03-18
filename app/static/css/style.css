@@ -122,7 +122,7 @@ main { flex: 1; }
    CARDS
    ============================================================ */
 .card {
-    background: var(--bg-card) !important;
+    background: var(--bg-card);
     border: 1px solid var(--bg-border) !important;
     border-radius: var(--radius-lg) !important;
     box-shadow: var(--shadow-sm) !important;
@@ -134,6 +134,8 @@ main { flex: 1; }
     border-color: rgba(13,110,253,0.3) !important;
     transform: translateY(-2px) !important;
 }
+/* Colored cards keep their background on hover */
+.card[style*="background"] { background: inherit; }
 
 .card-header {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;

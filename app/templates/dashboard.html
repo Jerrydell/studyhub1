@@ -19,45 +19,39 @@
     
     <!-- Subjects Card -->
     <div class="col-md-4">
-        <div class="card h-100" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:14px;box-shadow:0 4px 20px rgba(29,78,216,0.3);">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Total Subjects</h6>
-                        <h2 style="color:#ffffff;font-size:2.2rem;font-weight:800;margin:0;line-height:1;">{{ total_subjects }}</h2>
-                    </div>
-                    <i class="bi bi-folder2-open" style="font-size:2.8rem;color:rgba(255,255,255,0.2);"></i>
+        <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(29,78,216,0.35);position:relative;overflow:hidden;min-height:110px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="color:rgba(255,255,255,0.75);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">📁 Total Subjects</div>
+                    <div style="color:#ffffff;font-size:2.8rem;font-weight:900;line-height:1;">{{ total_subjects }}</div>
                 </div>
+                <i class="bi bi-folder2-open" style="font-size:3rem;color:rgba(255,255,255,0.15);"></i>
             </div>
         </div>
     </div>
 
     <!-- Notes Card -->
     <div class="col-md-4">
-        <div class="card h-100" style="background:linear-gradient(135deg,#059669,#10b981);border:none;border-radius:14px;box-shadow:0 4px 20px rgba(5,150,105,0.3);">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Total Notes</h6>
-                        <h2 style="color:#ffffff;font-size:2.2rem;font-weight:800;margin:0;line-height:1;">{{ total_notes }}</h2>
-                    </div>
-                    <i class="bi bi-journal-text" style="font-size:2.8rem;color:rgba(255,255,255,0.2);"></i>
+        <div style="background:linear-gradient(135deg,#059669,#10b981);border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(5,150,105,0.35);position:relative;overflow:hidden;min-height:110px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="color:rgba(255,255,255,0.75);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">📝 Total Notes</div>
+                    <div style="color:#ffffff;font-size:2.8rem;font-weight:900;line-height:1;">{{ total_notes }}</div>
                 </div>
+                <i class="bi bi-journal-text" style="font-size:3rem;color:rgba(255,255,255,0.15);"></i>
             </div>
         </div>
     </div>
 
     <!-- Activity Card -->
     <div class="col-md-4">
-        <div class="card h-100" style="background:linear-gradient(135deg,#0891b2,#06b6d4);border:none;border-radius:14px;box-shadow:0 4px 20px rgba(8,145,178,0.3);">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Member Since</h6>
-                        <h2 style="color:#ffffff;font-size:2.2rem;font-weight:800;margin:0;line-height:1;">{{ current_user.created_at.strftime('%b %Y') }}</h2>
-                    </div>
-                    <i class="bi bi-calendar-check" style="font-size:2.8rem;color:rgba(255,255,255,0.2);"></i>
+        <div style="background:linear-gradient(135deg,#0891b2,#06b6d4);border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(8,145,178,0.35);position:relative;overflow:hidden;min-height:110px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="color:rgba(255,255,255,0.75);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">📅 Member Since</div>
+                    <div style="color:#ffffff;font-size:2.8rem;font-weight:900;line-height:1;">{{ current_user.created_at.strftime('%b %Y') }}</div>
                 </div>
+                <i class="bi bi-calendar-check" style="font-size:3rem;color:rgba(255,255,255,0.15);"></i>
             </div>
         </div>
     </div>
