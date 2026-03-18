@@ -130,6 +130,11 @@ def index():
     return render_template('index.html', title='Home')
 
 
+@main_bp.route('/guidelines')
+def guidelines():
+    return render_template('guidelines.html', title='How to Use StudyHub')
+
+
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():
