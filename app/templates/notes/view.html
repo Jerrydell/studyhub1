@@ -96,7 +96,7 @@
 <!-- Note Content -->
 <div class="card shadow-sm mb-4">
     <div class="card-body p-4">
-        <div class="note-content" style="white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; font-size: 1.1rem;">{{ note.content }}</div>
+        <div class="note-content">{{ note.content }}</div>
     </div>
 </div>
 
@@ -207,10 +207,7 @@
                     <i class="bi bi-clipboard"></i> Copy
                 </button>
             </div>
-            <div id="ai-result-text"
-                 style="background:#f8f9fa; border-left:4px solid #0d6efd;
-                        padding:1rem; border-radius:6px;
-                        font-size:0.95rem; line-height:1.8;">
+            <div id="ai-result-text" class="ai-result-box">
             </div>
         </div>
 
@@ -222,11 +219,41 @@
 {% block extra_css %}
 <style>
     .note-content {
-        background: #f8f9fa;
+        background: #ffffff;
+        color: #1a1a1a;
         padding: 2rem;
-        border-radius: 8px;
+        border-radius: 10px;
+        border-left: 4px solid {{ note.subject.color }};
+        white-space: pre-wrap;
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+        line-height: 1.9;
+        font-size: 1rem;
+        border: 1px solid #e2e8f0;
         border-left: 4px solid {{ note.subject.color }};
     }
+    .ai-result-box {
+        background: #f0f6ff;
+        border-left: 4px solid #0d6efd;
+        padding: 1.1rem 1.25rem;
+        border-radius: 0 10px 10px 0;
+        font-size: 0.92rem;
+        line-height: 1.85;
+        color: #0f172a;
+    }
+    /* Dark mode overrides */
+    body.dark-mode .note-content {
+        background: #0f1e38 !important;
+        color: #f1f5f9 !important;
+        border-color: #1e3a5f !important;
+        border-left-color: {{ note.subject.color }} !important;
+    }
+    body.dark-mode .ai-result-box {
+        background: #0c1d38 !important;
+        color: #e2e8f0 !important;
+        border-left-color: #3b82f6 !important;
+    }
+    body.dark-mode .ai-result-box strong { color: #93c5fd !important; }
+    body.dark-mode .ai-result-box code { background: #1e3a5f !important; color: #7dd3fc !important; }
 </style>
 {% endblock %}
 

@@ -910,14 +910,20 @@ Structure the note with:
 
 Write it as a proper study note a student can learn from:"""
 
-        generated_content = call_ai(prompt, max_tokens=2000)
+        try:
+            generated_content = call_ai(prompt, max_tokens=2000)
+        except Exception as e:
+            generated_content = f"❌ AI error: {str(e)}. Please try again in a moment."
+
+        if not generated_content or generated_content.startswith("❌"):
+            flash("AI is currently unavailable. Please try again in a moment.", "warning")
 
         # Clean markdown symbols from generated content
         import re
-        generated_content = re.sub(r'\*\*(.+?)\*\*', r'\1', generated_content)  # Remove **bold**
-        generated_content = re.sub(r'\*(.+?)\*', r'\1', generated_content)       # Remove *italic*
-        generated_content = re.sub(r'^#{1,6}\s+', '', generated_content, flags=re.MULTILINE)  # Remove headers
-        generated_content = re.sub(r'^\s*[-*]\s+', '• ', generated_content, flags=re.MULTILINE)  # Clean bullets
+        generated_content = re.sub(r'\*\*(.+?)\*\*', r'\1', generated_content)
+        generated_content = re.sub(r'\*(.+?)\*', r'\1', generated_content)
+        generated_content = re.sub(r'^#{1,6}\s+', '', generated_content, flags=re.MULTILINE)
+        generated_content = re.sub(r'^\s*[-*]\s+', '• ', generated_content, flags=re.MULTILINE)
 
         return render_template('ai_note_generator.html',
                                title='AI Note Generator',

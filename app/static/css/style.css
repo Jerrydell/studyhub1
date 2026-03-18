@@ -644,3 +644,399 @@ body.dark-mode footer { background: #040810 !important; }
     .navbar-brand { font-size: 1rem !important; }
     .btn-lg { font-size: 0.9rem !important; padding: 0.55rem 1.2rem !important; }
 }
+
+
+/* ============================================================
+   STAT CARDS — Dashboard
+   ============================================================ */
+.stat-card {
+    border: none !important;
+    border-radius: 16px !important;
+    overflow: hidden;
+    position: relative;
+}
+.stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.92;
+}
+.stat-card-blue  { background: linear-gradient(135deg, #1d4ed8, #3b82f6) !important; }
+.stat-card-green { background: linear-gradient(135deg, #065f46, #10b981) !important; }
+.stat-card-teal  { background: linear-gradient(135deg, #0e7490, #06b6d4) !important; }
+
+.stat-label {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px !important;
+}
+.stat-value {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    line-height: 1.1;
+}
+.stat-icon {
+    font-size: 2.8rem !important;
+    color: rgba(255,255,255,0.3) !important;
+}
+
+/* Dark mode stat cards stay the same (they already have contrast) */
+
+/* ============================================================
+   AI RESULT / ANSWER BOX — global
+   ============================================================ */
+.ai-result-box {
+    background: #f0f6ff;
+    border-left: 4px solid #0d6efd;
+    padding: 1.1rem 1.25rem;
+    border-radius: 0 10px 10px 0;
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: #0f172a !important;
+}
+.ai-result-box * { color: #0f172a !important; }
+.ai-result-box strong { color: #1e40af !important; }
+.ai-result-box code {
+    background: #dbeafe;
+    color: #1e3a8a !important;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+body.dark-mode .ai-result-box {
+    background: #0c1d38 !important;
+    border-left-color: #3b82f6 !important;
+    color: #e2e8f0 !important;
+}
+body.dark-mode .ai-result-box * { color: #e2e8f0 !important; }
+body.dark-mode .ai-result-box strong { color: #93c5fd !important; }
+body.dark-mode .ai-result-box code {
+    background: #1e3a5f !important;
+    color: #7dd3fc !important;
+}
+
+/* ============================================================
+   NOTE CONTENT DISPLAY
+   ============================================================ */
+.note-content {
+    background: #ffffff;
+    color: #1a1a1a !important;
+    padding: 2rem;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    font-size: 1rem;
+    line-height: 1.9;
+}
+.note-content * { color: #1a1a1a !important; }
+
+body.dark-mode .note-content {
+    background: #0f1e38 !important;
+    color: #f1f5f9 !important;
+}
+body.dark-mode .note-content * { color: #f1f5f9 !important; }
+
+
+/* ============================================================
+   DASHBOARD STAT CARDS — Fix invisible text in light mode
+   ============================================================ */
+.stat-card {
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    overflow: hidden;
+    position: relative;
+}
+.stat-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.14) !important;
+}
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.12;
+    background: white;
+    transform: translate(20px, -20px);
+}
+
+.stat-card-blue  { background: linear-gradient(135deg, #1d4ed8, #3b82f6) !important; }
+.stat-card-green { background: linear-gradient(135deg, #15803d, #22c55e) !important; }
+.stat-card-teal  { background: linear-gradient(135deg, #0d9488, #14b8a6) !important; }
+
+.stat-label {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 6px !important;
+}
+.stat-value {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+.stat-icon {
+    font-size: 2.5rem !important;
+    color: rgba(255,255,255,0.25) !important;
+}
+
+/* Subject cards in dashboard */
+.card .card-title a.text-dark {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+.card .card-title a.text-dark:hover { color: #0d6efd !important; }
+
+/* Dashboard study plan result box */
+#plan-result {
+    background: #f0f7ff !important;
+    color: #0f172a !important;
+    border-left: 4px solid #f0b429 !important;
+    padding: 1.2rem !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.9 !important;
+}
+body.dark-mode #plan-result {
+    background: #0c1d38 !important;
+    color: #e2e8f0 !important;
+    border-left-color: #f0b429 !important;
+}
+
+/* ============================================================
+   NOTE VIEW — Fix note content & AI result box contrast
+   ============================================================ */
+.note-content {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    padding: 1.75rem !important;
+    border-radius: 12px !important;
+    white-space: pre-wrap;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    line-height: 1.9;
+    font-size: 0.95rem;
+    border: 1.5px solid #e2e8f0;
+}
+
+.ai-result-box {
+    background: #f0f7ff !important;
+    border-left: 4px solid #0d6efd !important;
+    padding: 1.2rem 1.4rem !important;
+    border-radius: 0 12px 12px 0 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.9 !important;
+    color: #0f172a !important;
+}
+.ai-result-box strong { color: #0f172a !important; }
+.ai-result-box ul { padding-left: 1.4rem; margin: 0.5rem 0; }
+.ai-result-box li { margin-bottom: 0.3rem; }
+
+/* Dark mode note content */
+body.dark-mode .note-content {
+    background: #0f1e38 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(13,110,253,0.2) !important;
+}
+
+/* Dark mode AI result box */
+body.dark-mode .ai-result-box {
+    background: #0a1628 !important;
+    color: #f1f5f9 !important;
+    border-left-color: #3b82f6 !important;
+}
+body.dark-mode .ai-result-box strong { color: #93c5fd !important; }
+body.dark-mode .ai-result-box h4,
+body.dark-mode .ai-result-box h5,
+body.dark-mode .ai-result-box h6 { color: #bfdbfe !important; }
+
+/* ============================================================
+   GENERAL INLINE STYLE OVERRIDES — Fix text-dark on light bg
+   ============================================================ */
+.text-dark { color: #0f172a !important; }
+.card-title { color: #0f172a !important; }
+.card-text { color: #334155 !important; }
+.card-footer small { color: #64748b !important; }
+
+/* Badge secondary — make it visible */
+.badge.bg-secondary {
+    background: #475569 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode overrides for these */
+body.dark-mode .text-dark { color: #f1f5f9 !important; }
+body.dark-mode .card-title { color: #f1f5f9 !important; }
+body.dark-mode .card-text { color: #cbd5e1 !important; }
+body.dark-mode .card-footer small { color: #94a3b8 !important; }
+body.dark-mode .stat-card { opacity: 0.95; }
+
+/* ============================================================
+   DASHBOARD STAT CARDS — Light & Dark Mode
+   ============================================================ */
+.stat-card {
+    border: none !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-md) !important;
+    overflow: hidden;
+    position: relative;
+}
+.stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+}
+.stat-card-blue  { background: linear-gradient(135deg, #1d4ed8, #2563eb) !important; }
+.stat-card-green { background: linear-gradient(135deg, #059669, #10b981) !important; }
+.stat-card-teal  { background: linear-gradient(135deg, #0891b2, #06b6d4) !important; }
+.stat-card-purple{ background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important; }
+.stat-card-orange{ background: linear-gradient(135deg, #d97706, #f59e0b) !important; }
+
+.stat-card .stat-label {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px !important;
+}
+.stat-card .stat-value {
+    color: #ffffff !important;
+    font-size: 2rem !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+.stat-card .stat-icon {
+    font-size: 2.5rem !important;
+    color: rgba(255,255,255,0.25) !important;
+}
+.stat-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2) !important;
+    border: none !important;
+}
+
+/* ============================================================
+   NOTE VIEW — Light & Dark Mode
+   ============================================================ */
+.note-content {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    padding: 1.75rem !important;
+    border-radius: var(--radius-md) !important;
+    white-space: pre-wrap;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    line-height: 1.9;
+    font-size: 0.95rem;
+    border: 1.5px solid #e2e8f0 !important;
+    min-height: 120px;
+}
+
+.ai-result-box {
+    background: #f0f6ff !important;
+    color: #0f172a !important;
+    border-left: 4px solid #0d6efd;
+    padding: 1.1rem 1.25rem !important;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.85 !important;
+}
+.ai-result-box strong { color: #1e3a5f !important; }
+
+/* Dark mode note view */
+body.dark-mode .note-content {
+    background: #0f1e38 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(13,110,253,0.2) !important;
+}
+body.dark-mode .ai-result-box {
+    background: #0c1a2e !important;
+    color: #f0f8ff !important;
+    border-left-color: #3b82f6 !important;
+}
+body.dark-mode .ai-result-box strong { color: #93c5fd !important; }
+
+/* Note title in light mode */
+#note-card h2 { color: #0f172a !important; }
+#note-card .text-muted { color: #64748b !important; }
+body.dark-mode #note-card h2 { color: #f1f5f9 !important; }
+body.dark-mode #note-card .text-muted { color: #94a3b8 !important; }
+
+/* Note card background — keep text visible regardless of custom bg color */
+#note-card { color: #0f172a !important; }
+body.dark-mode #note-card { color: #f1f5f9 !important; }
+
+/* AI panel dark mode */
+body.dark-mode #ai-panel .card-header { background: #0f1e38 !important; }
+body.dark-mode #ai-panel { background: #111827 !important; }
+body.dark-mode #ai-loading p { color: #94a3b8 !important; }
+body.dark-mode #ai-result-label { color: #6ea8fe !important; }
+
+/* ============================================================
+   SEARCH INPUT IN NAVBAR
+   ============================================================ */
+.navbar .form-control {
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+    color: #ffffff !important;
+}
+.navbar .form-control::placeholder { color: rgba(255,255,255,0.5) !important; }
+.navbar .form-control:focus {
+    background: rgba(255,255,255,0.18) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.2) !important;
+}
+
+/* ============================================================
+   SUBJECT CARDS — Light Mode Text Fix
+   ============================================================ */
+.subject-card .card-title,
+.subject-card h5,
+.subject-card h6 {
+    color: #0f172a !important;
+}
+.subject-card .text-muted,
+.subject-card small {
+    color: #64748b !important;
+}
+body.dark-mode .subject-card .card-title,
+body.dark-mode .subject-card h5,
+body.dark-mode .subject-card h6 {
+    color: #f1f5f9 !important;
+}
+body.dark-mode .subject-card .text-muted,
+body.dark-mode .subject-card small {
+    color: #94a3b8 !important;
+}
+
+/* ============================================================
+   GENERAL TEXT CONTRAST FIXES
+   ============================================================ */
+/* Ensure all card text is visible in light mode */
+.card .card-title { color: #0f172a !important; }
+.card .card-text  { color: #334155 !important; }
+.card small       { color: #64748b !important; }
+.card h5, .card h6 { color: #0f172a !important; }
+
+/* Dark mode card text */
+body.dark-mode .card .card-title { color: #f1f5f9 !important; }
+body.dark-mode .card .card-text  { color: #cbd5e1 !important; }
+body.dark-mode .card small       { color: #94a3b8 !important; }
+body.dark-mode .card h5,
+body.dark-mode .card h6          { color: #f1f5f9 !important; }
+
+/* Stat cards always white text — override above */
+.stat-card .card-title { color: #ffffff !important; }
+.stat-card h5, .stat-card h6 { color: #ffffff !important; }
