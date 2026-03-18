@@ -130,11 +130,6 @@ def index():
     return render_template('index.html', title='Home')
 
 
-@main_bp.route('/guidelines')
-def guidelines():
-    return render_template('guidelines.html', title='How to Use StudyHub')
-
-
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():
@@ -383,24 +378,11 @@ def view_note(note_id):
     View a specific note
     """
     note = Note.query.get_or_404(note_id)
-
-    # Allow owner to view
-    is_owner = note.subject.user_id == current_user.id
-
-    # Allow group members to view if they share a group with the note owner
-    is_group_member = False
-    if not is_owner:
-        from app.models import StudyGroup
-        note_owner_id = note.subject.user_id
-        my_groups = StudyGroup.query.filter(StudyGroup.members.any(id=current_user.id)).all()
-        for group in my_groups:
-            if group.members.filter_by(id=note_owner_id).first():
-                is_group_member = True
-                break
-
-    if not is_owner and not is_group_member:
+    
+    # Security: Ensure the note belongs to the current user (through subject)
+    if note.subject.user_id != current_user.id:
         abort(403)
-
+    
     return render_template('notes/view.html', title=note.title, note=note)
 
 
@@ -1346,153 +1328,3 @@ def send_notification(user_id, title, message, icon='🔔', link=''):
     )
     db.session.add(notif)
     db.session.commit()
-
-
-# ============================================================================
-# RESET PASSWORD
-# ============================================================================
-
-def send_reset_email(user, reset_url):
-    import smtplib
-    from email.mime.text import MIMEText
-    from email.mime.multipart import MIMEMultipart
-    import os
-
-    sender = os.environ.get('MAIL_USERNAME', '')
-    password = os.environ.get('MAIL_PASSWORD', '')
-
-    if not sender or not password:
-        return False
-
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = '🔑 Reset Your StudyHub Password'
-    msg['From'] = f'StudyHub ABA-TECH <{sender}>'
-    msg['To'] = user.email
-
-    html = f'''
-    <div style="font-family:Arial,sans-serif;max-width:500px;margin:auto;padding:20px;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0d6efd);padding:20px;border-radius:10px;text-align:center;">
-            <h1 style="color:white;margin:0;">📚 StudyHub</h1>
-            <p style="color:#ccc;margin:5px 0 0;">by ABA-TECH</p>
-        </div>
-        <div style="padding:30px;background:#f8f9fa;border-radius:10px;margin-top:10px;">
-            <h2>Hello {user.username}! 👋</h2>
-            <p>You requested to reset your password. Click the button below:</p>
-            <div style="text-align:center;margin:25px 0;">
-                <a href="{reset_url}" style="background:#0d6efd;color:white;padding:14px 30px;border-radius:8px;text-decoration:none;font-size:1.1rem;">
-                    🔑 Reset My Password
-                </a>
-            </div>
-            <p style="color:#666;font-size:0.85rem;">This link expires in <strong>1 hour</strong>. If you didn't request this, ignore this email.</p>
-        </div>
-        <p style="text-align:center;color:#999;font-size:0.8rem;">© 2025 StudyHub · Built by Abaye Jeremiah | ABA-TECH</p>
-    </div>
-    '''
-
-    msg.attach(MIMEText(html, 'html'))
-
-    try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(sender, password)
-            smtp.sendmail(sender, user.email, msg.as_string())
-        return True
-    except Exception as e:
-        print(f'Email error: {e}')
-        return False
-
-
-@auth_bp.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
-
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            flash('If that email exists, a reset link has been sent.', 'info')
-            return render_template('auth/reset_password.html')
-
-        token = user.generate_reset_token()
-        db.session.commit()
-
-        reset_url = url_for('auth.reset_password_confirm', token=token, _external=True)
-        sent = send_reset_email(user, reset_url)
-
-        if sent:
-            flash('✅ Reset link sent to your email! Check your inbox.', 'success')
-        else:
-            flash('⚠️ Email not configured. Please contact admin.', 'warning')
-
-        return redirect(url_for('auth.login'))
-
-    return render_template('auth/reset_password.html', title='Reset Password')
-
-
-@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password_confirm(token):
-    user = User.query.filter_by(reset_token=token).first()
-
-    if not user or not user.verify_reset_token(token):
-        flash('❌ Invalid or expired reset link.', 'danger')
-        return redirect(url_for('auth.reset_password'))
-
-    if request.method == 'POST':
-        new_password = request.form.get('new_password', '').strip()
-        confirm_password = request.form.get('confirm_password', '').strip()
-
-        if len(new_password) < 6:
-            flash('Password must be at least 6 characters.', 'danger')
-            return render_template('auth/reset_password_confirm.html', token=token)
-
-        if new_password != confirm_password:
-            flash('Passwords do not match.', 'danger')
-            return render_template('auth/reset_password_confirm.html', token=token)
-
-        user.set_password(new_password)
-        user.reset_token = None
-        user.reset_token_expiry = None
-        db.session.commit()
-        flash('✅ Password reset successfully! You can now log in.', 'success')
-        return redirect(url_for('auth.login'))
-
-    return render_template('auth/reset_password_confirm.html', token=token)
-
-
-# ============================================================================
-# ABA-TECH AI FOLLOW-UP CHAT
-# ============================================================================
-
-@main_bp.route('/ai/chat-followup', methods=['POST'])
-@login_required
-def ai_chat_followup():
-    from flask import jsonify
-    from app.ai_service import call_ai
-    import json
-
-    data = request.get_json()
-    message = data.get('message', '')
-    topic = data.get('topic', '')
-    note_content = data.get('note_content', '')
-    history = data.get('history', [])
-
-    if not message:
-        return jsonify({'reply': 'Please enter a question.'})
-
-    system_prompt = f"""You are ABA-TECH AI, a smart study assistant built by Abaye Jeremiah for StudyHub.
-You are helping a student understand the topic: {topic}.
-Here is a summary of the study note already generated:
-{note_content}
-
-Answer the student's follow-up questions clearly and helpfully.
-Keep answers concise but detailed. Use bullet points when listing things.
-Never ask questions back — just provide the best answer you can.
-Always stay on topic about {topic}."""
-
-    # Build full prompt as single message if models don't support system role
-    full_prompt = f"{system_prompt}\n\nStudent question: {message}"
-    messages = [{'role': 'user', 'content': full_prompt}]
-
-    try:
-        reply = call_ai(full_prompt)
-        return jsonify({'reply': reply})
-    except Exception as e:
-        return jsonify({'reply': f'Error: {str(e)}'})

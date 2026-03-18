@@ -20,7 +20,7 @@ FREE_MODELS = [
 ]
 
 
-def call_ai(prompt_or_messages, max_tokens: int = 1024, system_prompt: str = None) -> str:
+def call_ai(prompt: str, max_tokens: int = 1024) -> str:
     """Call OpenRouter API, trying each free model until one works."""
     load_dotenv(override=True)
     api_key = os.environ.get('OPENROUTER_API_KEY', '')
@@ -28,19 +28,10 @@ def call_ai(prompt_or_messages, max_tokens: int = 1024, system_prompt: str = Non
     if not api_key or api_key == 'your_openrouter_api_key_here':
         return "❌ API key not set. Please add OPENROUTER_API_KEY to your .env file."
 
-    # Build messages list
-    if isinstance(prompt_or_messages, list):
-        messages = prompt_or_messages
-    else:
-        messages = [{"role": "user", "content": prompt_or_messages}]
-
-    if system_prompt:
-        messages = [{"role": "system", "content": system_prompt}] + messages
-
     for model in FREE_MODELS:
         payload = json.dumps({
             "model": model,
-            "messages": messages,
+            "messages": [{"role": "user", "content": prompt}],
             "max_tokens": max_tokens,
         }).encode("utf-8")
 
