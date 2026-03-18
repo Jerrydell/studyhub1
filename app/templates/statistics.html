@@ -12,51 +12,43 @@
 
 <!-- Overall Stats Cards -->
 <div class="row g-4 mb-5">
-    
+
     <!-- Total Subjects -->
-    <div class="col-md-3">
-        <div class="card text-white bg-primary h-100">
-            <div class="card-body text-center">
-                <i class="bi bi-folder2-open" style="font-size: 3rem; opacity: 0.5;"></i>
-                <h2 class="display-4 mt-3">{{ total_subjects }}</h2>
-                <p class="mb-0">Total Subjects</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-radius:16px;padding:22px 18px;box-shadow:0 6px 24px rgba(29,78,216,0.3);text-align:center;">
+            <i class="bi bi-folder2-open" style="font-size:2.5rem;color:rgba(255,255,255,0.25);display:block;margin-bottom:10px;"></i>
+            <div style="color:#ffffff;font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:6px;">{{ total_subjects }}</div>
+            <div style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Total Subjects</div>
         </div>
     </div>
-    
+
     <!-- Total Notes -->
-    <div class="col-md-3">
-        <div class="card text-white bg-success h-100">
-            <div class="card-body text-center">
-                <i class="bi bi-journal-text" style="font-size: 3rem; opacity: 0.5;"></i>
-                <h2 class="display-4 mt-3">{{ total_notes }}</h2>
-                <p class="mb-0">Total Notes</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <div style="background:linear-gradient(135deg,#059669,#10b981);border-radius:16px;padding:22px 18px;box-shadow:0 6px 24px rgba(5,150,105,0.3);text-align:center;">
+            <i class="bi bi-journal-text" style="font-size:2.5rem;color:rgba(255,255,255,0.25);display:block;margin-bottom:10px;"></i>
+            <div style="color:#ffffff;font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:6px;">{{ total_notes }}</div>
+            <div style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Total Notes</div>
         </div>
     </div>
-    
+
     <!-- Average Notes -->
-    <div class="col-md-3">
-        <div class="card text-white bg-info h-100">
-            <div class="card-body text-center">
-                <i class="bi bi-bar-chart" style="font-size: 3rem; opacity: 0.5;"></i>
-                <h2 class="display-4 mt-3">{{ avg_notes }}</h2>
-                <p class="mb-0">Avg Notes/Subject</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <div style="background:linear-gradient(135deg,#0891b2,#06b6d4);border-radius:16px;padding:22px 18px;box-shadow:0 6px 24px rgba(8,145,178,0.3);text-align:center;">
+            <i class="bi bi-bar-chart" style="font-size:2.5rem;color:rgba(255,255,255,0.25);display:block;margin-bottom:10px;"></i>
+            <div style="color:#ffffff;font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:6px;">{{ avg_notes }}</div>
+            <div style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Avg Notes/Subject</div>
         </div>
     </div>
-    
+
     <!-- Total Words -->
-    <div class="col-md-3">
-        <div class="card text-white bg-warning h-100">
-            <div class="card-body text-center">
-                <i class="bi bi-fonts" style="font-size: 3rem; opacity: 0.5;"></i>
-                <h2 class="display-4 mt-3">{{ '{:,}'.format(total_words) }}</h2>
-                <p class="mb-0">Total Words</p>
-            </div>
+    <div class="col-6 col-md-3">
+        <div style="background:linear-gradient(135deg,#7c3aed,#8b5cf6);border-radius:16px;padding:22px 18px;box-shadow:0 6px 24px rgba(124,58,237,0.3);text-align:center;">
+            <i class="bi bi-fonts" style="font-size:2.5rem;color:rgba(255,255,255,0.25);display:block;margin-bottom:10px;"></i>
+            <div style="color:#ffffff;font-size:2.4rem;font-weight:900;line-height:1;margin-bottom:6px;">{{ '{:,}'.format(total_words) }}</div>
+            <div style="color:rgba(255,255,255,0.8);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Total Words</div>
         </div>
     </div>
-    
+
 </div>
 
 <!-- Notes per Subject -->
