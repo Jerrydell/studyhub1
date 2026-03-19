@@ -6,11 +6,12 @@
 .sh-overlay {
     display: none;
     position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 99998;
-    align-items: center;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 99999;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 80px;
 }
 .sh-overlay.active {
     display: flex;
@@ -18,12 +19,13 @@
 .sh-modal {
     background: #ffffff;
     border-radius: 16px;
-    padding: 28px;
-    width: 90%;
-    max-width: 480px;
-    z-index: 99999;
+    padding: 24px;
+    width: 92%;
+    max-width: 440px;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    max-height: 85vh;
+    overflow-y: auto;
 }
 body.dark-mode .sh-modal {
     background: #111827;

@@ -1370,109 +1370,36 @@ def send_notification(user_id, title, message, icon='🔔', link=''):
 # RESET PASSWORD
 # ============================================================================
 
-def send_reset_email(user, reset_url):
-    import smtplib
-    from email.mime.text import MIMEText
-    from email.mime.multipart import MIMEMultipart
-    import os
-
-    sender = os.environ.get('MAIL_USERNAME', '')
-    password = os.environ.get('MAIL_PASSWORD', '')
-
-    if not sender or not password:
-        return False
-
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = '🔑 Reset Your StudyHub Password'
-    msg['From'] = f'StudyHub ABA-TECH <{sender}>'
-    msg['To'] = user.email
-
-    html = f'''
-    <div style="font-family:Arial,sans-serif;max-width:500px;margin:auto;padding:20px;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0d6efd);padding:20px;border-radius:10px;text-align:center;">
-            <h1 style="color:white;margin:0;">📚 StudyHub</h1>
-            <p style="color:#ccc;margin:5px 0 0;">by ABA-TECH</p>
-        </div>
-        <div style="padding:30px;background:#f8f9fa;border-radius:10px;margin-top:10px;">
-            <h2>Hello {user.username}! 👋</h2>
-            <p>You requested to reset your password. Click the button below:</p>
-            <div style="text-align:center;margin:25px 0;">
-                <a href="{reset_url}" style="background:#0d6efd;color:white;padding:14px 30px;border-radius:8px;text-decoration:none;font-size:1.1rem;">
-                    🔑 Reset My Password
-                </a>
-            </div>
-            <p style="color:#666;font-size:0.85rem;">This link expires in <strong>1 hour</strong>. If you didn't request this, ignore this email.</p>
-        </div>
-        <p style="text-align:center;color:#999;font-size:0.8rem;">© 2025 StudyHub · Built by Abaye Jeremiah | ABA-TECH</p>
-    </div>
-    '''
-
-    msg.attach(MIMEText(html, 'html'))
-
-    try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(sender, password)
-            smtp.sendmail(sender, user.email, msg.as_string())
-        return True
-    except Exception as e:
-        print(f'Email error: {e}')
-        return False
-
-
 @auth_bp.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()
-
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            flash('If that email exists, a reset link has been sent.', 'info')
-            return render_template('auth/reset_password.html')
-
-        token = user.generate_reset_token()
-        db.session.commit()
-
-        reset_url = url_for('auth.reset_password_confirm', token=token, _external=True)
-        sent = send_reset_email(user, reset_url)
-
-        if sent:
-            flash('✅ Reset link sent to your email! Check your inbox.', 'success')
-        else:
-            flash('⚠️ Email not configured. Please contact admin.', 'warning')
-
-        return redirect(url_for('auth.login'))
-
-    return render_template('auth/reset_password.html', title='Reset Password')
-
-
-@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password_confirm(token):
-    user = User.query.filter_by(reset_token=token).first()
-
-    if not user or not user.verify_reset_token(token):
-        flash('❌ Invalid or expired reset link.', 'danger')
-        return redirect(url_for('auth.reset_password'))
-
-    if request.method == 'POST':
         new_password = request.form.get('new_password', '').strip()
         confirm_password = request.form.get('confirm_password', '').strip()
 
-        if len(new_password) < 6:
-            flash('Password must be at least 6 characters.', 'danger')
-            return render_template('auth/reset_password_confirm.html', token=token)
+        if not email or not new_password:
+            flash('Please fill in all fields.', 'danger')
+            return render_template('auth/reset_password.html')
 
         if new_password != confirm_password:
             flash('Passwords do not match.', 'danger')
-            return render_template('auth/reset_password_confirm.html', token=token)
+            return render_template('auth/reset_password.html')
+
+        if len(new_password) < 6:
+            flash('Password must be at least 6 characters.', 'danger')
+            return render_template('auth/reset_password.html')
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash('No account found with that email.', 'danger')
+            return render_template('auth/reset_password.html')
 
         user.set_password(new_password)
-        user.reset_token = None
-        user.reset_token_expiry = None
         db.session.commit()
         flash('✅ Password reset successfully! You can now log in.', 'success')
         return redirect(url_for('auth.login'))
 
-    return render_template('auth/reset_password_confirm.html', token=token)
+    return render_template('auth/reset_password.html', title='Reset Password')
 
 
 # ============================================================================
