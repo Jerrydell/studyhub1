@@ -35,7 +35,6 @@
         /* ===== GLOBAL GLOW LAYOUT ===== */
         .page-wrapper {
             flex: 1;
-            position: relative;
         }
         .page-wrapper::before {
             content: '';
@@ -43,10 +42,9 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background:
                 radial-gradient(ellipse at 0% 0%, rgba(13,110,253,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 100% 100%, rgba(111,66,193,0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(32,201,151,0.03) 0%, transparent 60%);
+                radial-gradient(ellipse at 100% 100%, rgba(111,66,193,0.05) 0%, transparent 50%);
             pointer-events: none;
-            z-index: 0;
+            z-index: -1;
         }
 
         /* ===== NAVBAR ===== */

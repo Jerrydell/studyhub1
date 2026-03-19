@@ -644,7 +644,14 @@ footer {
     position: relative;
     overflow: hidden;
     margin-top: auto;
+    z-index: 1;
 }
+
+/* Fix modal stacking — ensure modals always appear on top */
+.modal { z-index: 1055 !important; }
+.modal-backdrop { z-index: 1050 !important; }
+.modal-dialog { z-index: 1056 !important; }
+.navbar { z-index: 1040 !important; }
 footer::before {
     content: '';
     position: absolute;
