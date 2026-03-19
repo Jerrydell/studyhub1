@@ -1,14 +1,89 @@
 {% extends "base.html" %}
 {% block title %}Study Groups - StudyHub{% endblock %}
 
+{% block extra_css %}
+<style>
+.sh-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 99998;
+    align-items: center;
+    justify-content: center;
+}
+.sh-overlay.active {
+    display: flex;
+}
+.sh-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 480px;
+    z-index: 99999;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+body.dark-mode .sh-modal {
+    background: #111827;
+    color: #f1f5f9;
+}
+body.dark-mode .sh-modal .form-control {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255,255,255,0.15) !important;
+}
+body.dark-mode .sh-modal label {
+    color: #cbd5e1 !important;
+}
+.sh-modal h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #0f172a;
+}
+body.dark-mode .sh-modal h5 { color: #f1f5f9; }
+.sh-modal .form-control {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: 5px;
+    color: #0f172a;
+    background: #ffffff;
+}
+.sh-modal .form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+.sh-modal label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #334155;
+    display: block;
+    margin-bottom: 4px;
+}
+.sh-modal .mb-3 { margin-bottom: 16px; }
+.sh-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>👥 Study Groups</h2>
     <div class="d-flex gap-2">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#joinModal">
+        <button class="btn btn-success" onclick="openModal('joinModal')">
             <i class="bi bi-box-arrow-in-right"></i> Join Group
         </button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+        <button class="btn btn-primary" onclick="openModal('createModal')">
             <i class="bi bi-plus-circle"></i> Create Group
         </button>
     </div>
@@ -18,26 +93,25 @@
 <div class="row g-4">
     {% for group in groups %}
     <div class="col-md-6">
-        <div class="card shadow-sm h-100">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title">👥 {{ group.name }}</h5>
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title mb-0">👥 {{ group.name }}</h5>
                     <span class="badge bg-primary">{{ group.member_count }} members</span>
                 </div>
                 {% if group.description %}
                 <p class="text-muted small mb-2">{{ group.description }}</p>
                 {% endif %}
-                <p class="text-muted small mb-3">
+                <p class="small mb-3">
                     <i class="bi bi-key"></i> Invite Code:
                     <strong class="text-primary">{{ group.invite_code }}</strong>
                     <button class="btn btn-sm btn-outline-secondary ms-2"
-                            onclick="navigator.clipboard.writeText('{{ group.invite_code }}');alert('Code copied!')">
+                            onclick="navigator.clipboard.writeText('{{ group.invite_code }}');this.innerHTML='✅ Copied!'">
                         <i class="bi bi-clipboard"></i>
                     </button>
                 </p>
                 <div class="d-flex gap-2">
-                    <a href="{{ url_for('main.view_group', group_id=group.id) }}"
-                       class="btn btn-primary btn-sm">
+                    <a href="{{ url_for('main.view_group', group_id=group.id) }}" class="btn btn-primary btn-sm">
                         <i class="bi bi-eye"></i> View Group
                     </a>
                     {% if group.created_by == current_user.id %}
@@ -51,16 +125,16 @@
 </div>
 
 {% else %}
-<div class="card shadow-sm">
+<div class="card">
     <div class="card-body text-center py-5">
-        <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
+        <i class="bi bi-people text-muted" style="font-size:4rem;"></i>
         <h4 class="mt-3">No Study Groups Yet</h4>
         <p class="text-muted">Create a group or join one with an invite code!</p>
         <div class="d-flex justify-content-center gap-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#joinModal">
+            <button class="btn btn-success" onclick="openModal('joinModal')">
                 <i class="bi bi-box-arrow-in-right"></i> Join Group
             </button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+            <button class="btn btn-primary" onclick="openModal('createModal')">
                 <i class="bi bi-plus-circle"></i> Create Group
             </button>
         </div>
@@ -68,66 +142,75 @@
 </div>
 {% endif %}
 
-<!-- Create Group Modal -->
-<div class="modal fade" id="createModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">👥 Create Study Group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- CREATE GROUP MODAL -->
+<div class="sh-overlay" id="createModal" onclick="handleOverlayClick(event, 'createModal')">
+    <div class="sh-modal">
+        <h5>👥 Create Study Group</h5>
+        <form method="POST" action="{{ url_for('main.create_group') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label>Group Name</label>
+                <input type="text" name="name" class="form-control"
+                       placeholder="e.g. Physics Study Crew" required>
             </div>
-            <form method="POST" action="{{ url_for('main.create_group') }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Group Name</label>
-                        <input type="text" name="name" class="form-control"
-                               placeholder="e.g. Physics Study Crew" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description (optional)</label>
-                        <textarea name="description" class="form-control" rows="2"
-                                  placeholder="What is this group about?"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle"></i> Create Group
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="mb-3">
+                <label>Description (optional)</label>
+                <textarea name="description" class="form-control" rows="2"
+                          placeholder="What is this group about?"></textarea>
+            </div>
+            <div class="sh-footer">
+                <button type="button" class="btn btn-outline-secondary" onclick="closeModal('createModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Create Group
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- Join Group Modal -->
-<div class="modal fade" id="joinModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🔑 Join Study Group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- JOIN GROUP MODAL -->
+<div class="sh-overlay" id="joinModal" onclick="handleOverlayClick(event, 'joinModal')">
+    <div class="sh-modal">
+        <h5>🔑 Join Study Group</h5>
+        <form method="POST" action="{{ url_for('main.join_group') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label>Invite Code</label>
+                <input type="text" name="invite_code" class="form-control"
+                       placeholder="Enter 8-character code" maxlength="8"
+                       style="letter-spacing:0.3rem; font-weight:700; text-align:center; font-size:1.1rem;" required>
+                <small class="text-muted mt-1 d-block">Ask your group admin for the invite code</small>
             </div>
-            <form method="POST" action="{{ url_for('main.join_group') }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Invite Code</label>
-                        <input type="text" name="invite_code" class="form-control form-control-lg text-center"
-                               placeholder="Enter 8-character code" maxlength="8"
-                               style="letter-spacing: 0.3rem; font-weight: bold;" required>
-                        <small class="text-muted">Ask your group admin for the invite code</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-box-arrow-in-right"></i> Join Group
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="sh-footer">
+                <button type="button" class="btn btn-outline-secondary" onclick="closeModal('joinModal')">Cancel</button>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-box-arrow-in-right"></i> Join Group
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+function handleOverlayClick(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal('createModal');
+        closeModal('joinModal');
+    }
+});
+</script>
 {% endblock %}
